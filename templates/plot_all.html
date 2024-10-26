@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All ECG Signals Plot - Facility One Hospital</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        header {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .container {
+            padding-top: 20px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+            margin-top: 20px;
+            font-size: 0.8em;
+        }
+        .plot {
+            margin-bottom: 30px;
+        }
+        .alert-normal {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .alert-svectopic {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .alert-ventectopic {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .alert-fusion {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        .alert-unknown {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+        .btn-secondary {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Facility One Hospital</h1>
+        <p>Cardiology Department - All Signal Plots</p>
+    </header>
+    <div class="container">
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning" role="alert">{{ message }}</div>
+        {% endfor %}
+        <h3>All Signals Plot</h3>
+        <div class="plot">{{ plot_div | safe }}</div>
+        <h3>Predicted Labels:</h3>
+        <ul>
+            {% for index, label in predictions %}
+            <li class="alert {% if label == 'Non-ecotic beat (Normal beat)' %}alert-normal{% elif label == 'Supraventricular ectopic beats' %}alert-svectopic{% elif label == 'Ventricular ectopic beats' %}alert-ventectopic{% elif label == 'Fusion Beats' %}alert-fusion{% else %}alert-unknown{% endif %}" role="alert">
+                Signal {{ index }}: {{ label }}
+            </li>
+            {% endfor %}
+        </ul>
+        <form action="{{ url_for('select_index') }}" method="get" style="display:inline;">
+            <button type="submit" class="btn btn-secondary" tabindex="0">Back to Index Selection</button>
+        </form>
+        <form action="/" method="get" style="display:inline;">
+            <button type="submit" class="btn btn-secondary" tabindex="0">Home</button>
+        </form>
+    </div>
+    <footer>
+        <p>© 2024 Facility One Hospital. All rights reserved.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facility One Hospital Cardiology Department</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        header {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .container {
+            padding-top: 20px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #f0f0f0;
+            margin-top: 20px;
+            font-size: 0.8em;
+        }
+        .alert-normal {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .alert-svectopic {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .alert-ventectopic {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .alert-fusion {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+        .alert-unknown {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+
+	
+
+	.btn-primary{
+		margin-top: 20px;
+	}
+	.btn-secondary{
+		margin-top:20px;
+	}
+
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Facility One Hospital</h1>
+        <p>Cardiology Department</p>
+    </header>
+    <div class="container">
+        <h2>Upload ECG Data</h2>
+        {% for message in get_flashed_messages() %}
+        <div class="alert alert-warning" role="alert">{{ message }}</div>
+        {% endfor %}
+        {% if max_index != None %}
+        <form action="/plot" method="post">
+            <div class="form-group">
+                <label for="signal_index">Select Signal Index:</label>
+                <select id="signal_index" name="signal_index" class="form-control" aria-label="Select Signal Index" tabindex="0">
+                    {% for i in range(max_index + 1) %}
+                    <option value="{{ i }}" tabindex="0">{{ i }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" tabindex="0">Plot selected index</button>
+        </form>
+        <form action="/plot_all" method="post">
+            <button type="submit" class="btn btn-primary" tabindex="0">Plot All Signals</button>
+        </form>
+        <form action="/" method="get">
+            <button type="submit" class="btn btn-secondary" tabindex="0">Home</button>
+        </form>
+        {% else %}
+        <form action="/" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="file" name="file" accept=".csv" class="form-control-file" aria-label="Upload CSV File" required>
+            </div>
+            <button type="submit" class="btn btn-success" tabindex="0">Upload CSV</button>
+        </form>
+        {% endif %}
+        <div id="loading" style="display:none;">
+            <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-5">
+        <h2>Types of Heartbeats</h2>
+        <div class="alert alert-normal" role="alert">
+            <h4 class="alert-heading">Normal Beats</h4>
+            <p>These are regular heartbeats that follow the normal rhythm of the heart.</p>
+            <p><strong>Risks:</strong> No specific risks are associated with normal beats.</p>
+        </div>
+        <div class="alert alert-svectopic" role="alert">
+            <h4 class="alert-heading">Supraventricular Ectopic Beats (SVE)</h4>
+            <p>Premature heartbeats originating above the ventricles, typically in the atria. They can be benign but sometimes indicate underlying issues.</p>
+            <p><strong>Risks:</strong> Frequent SVE can indicate underlying heart conditions like atrial fibrillation, increasing the risk of stroke and heart failure.</p>
+        </div>
+        <div class="alert alert-ventectopic" role="alert">
+            <h4 class="alert-heading">Ventricular Ectopic Beats (VE)</h4>
+            <p>Premature beats originating in the ventricles. They can be more serious than SVE, often indicating potential for more severe arrhythmias.</p>
+            <p><strong>Risks:</strong> VEs increase the risk of sudden cardiac arrest and heart failure, especially if frequent.</p>
+        </div>
+        <div class="alert alert-fusion" role="alert">
+            <h4 class="alert-heading">Fusion Beats</h4>
+            <p>These occur when a normal beat and an ectopic beat coincide, resulting in a combined or “fused” signal.</p>
+            <p><strong>Risks:</strong> Fusion beats suggest arrhythmia and may need to be monitored, though they are not usually harmful themselves.</p>
+        </div>
+        <div class="alert alert-unknown" role="alert">
+            <h4 class="alert-heading">Unknown Beats</h4>
+            <p>These are beats that the model cannot classify due to insufficient data or unusual signal patterns.</p>
+            <p><strong>Risks:</strong> Unknown beats could represent benign or potentially serious conditions and warrant further investigation.</p>
+        </div>
+    </div>
+    <footer>
+        <p>© 2024 Facility One Hospital. All rights reserved.</p>
+    </footer>
+    <script>
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function() {
+                document.getElementById('loading').style.display = 'block';
+            });
+        });
+    </script>
+</body>
+</html>
